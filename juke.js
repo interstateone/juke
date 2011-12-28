@@ -48,7 +48,7 @@
 			elem.children().wrapAll('<ul id="tapebox"/>');
 			// prepend the placeholder to the list
 			$("#tapebox").wrapAll('<div id="displaybox"/>');
-			$("#tapebox").prepend('<li><img src="'+ option.placeholder +'" width="125"></li><li class="filler">&nbsp;</li><li class="filler">&nbsp;</li>');
+			$("#tapebox").prepend('<li><img src="'+ option.placeholder +'" width="125"></li><li class="filler">&nbsp;</li>');
 			// prepend the bg image
 			$("#displaybox").prepend('<img src="'+ option.imagesFolder +'bg.png" alt="">');
 			// add the other structure around the list
@@ -77,7 +77,7 @@
 						onplay: function(){
 							$("#playtoggle").addClass('playing');
 							document.title = "\u25B6 "+ option.title +" - " + title;
-							$("#tapebox").animate({"left":"-175px"}, option.animationSpeed, "swing");
+							$("#tapebox").animate({"left":"-200px"}, option.animationSpeed, "swing");
 						
 							if(option.tooltips) $(".tooltip").html("<p>"+ trackInfo[currentTrack-1].artist +"</p><p class='track'>"+ trackInfo[currentTrack-1].track +"</p>");
 						},
