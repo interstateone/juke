@@ -1,0 +1,231 @@
+.opacity(@value: 0.5) {
+    -khtml-opacity: @value;  							// some pre-2004 browsers
+    -moz-opacity: 	@value;    							// really old FF versions
+    -ms-filter: 	%('alpha(opacity=%s)', @value); 	// some IE versions
+    filter: 		e(%("alpha(opacity=%s)", @value));  // most other IE versions
+    opacity: 		@value;         					// CSS standard
+}
+
+@imgsize: 125px;
+@width: 500px;
+
+#juke{
+	position:relative;
+	width: @width;
+}
+#juke ul{ margin:0; padding:0;}
+#juke ul li:before{ content: none; }
+#playhead{display:block;position:absolute;top:-7px;left:185px;z-index:20;}
+#playtoggle{position:absolute;top:58px;left:50px;width:30px;height:30px;background:url(../../images/juke/player.png) no-repeat -30px 0px;cursor:pointer;z-index:0;}
+.hover{z-index:25 !important;}
+#playtoggle.playing{background-position:0 0;}
+.shadow{
+	position:absolute;
+	height:125px;
+	background-color: rgba(0, 0, 0, 0.5);
+	background: transparent\9; -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#7F000000,endColorstr=#7F000000)"; /* hack for <IE9 */
+	zoom: 1;
+	z-index:10;
+}
+#shadowleft{left:0px;right:312px;}
+#shadowright{left:313px;right:0px;}
+#displaybox{width:500px;height:150px;overflow:hidden;top:0px;position:relative;}
+#displaybox_overlay img{
+	z-index: 5;
+	top: 0px;
+	position: absolute;
+}
+#tapebox{position:absolute;height:150px;width:2000px;left:200px;top:0px;color:transparent;}
+.filler{ width: 125px;}
+#tapebox li{list-style:none;display:block;float:left;margin:0px;padding:0px;width:125px;}
+.tooltip {
+	display:none;
+	background-color: rgba(0, 0, 0, 0.6);
+	background: transparent\9; -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000,endColorstr=#99000000)"; /* hack for <IE9 */
+	font-size: 10px;
+	padding: 5px 10px;
+	overflow: hidden;
+	text-align: center;
+	width: 105px;
+	height: 115px;
+	position: absolute;
+	top: 7px;
+	left: 3px;
+	color: white;
+	z-index: -1;
+	p{
+		padding:0;
+		margin: 0 0 5px 0;
+		line-height: 10px;
+		.opacity(1);
+	}
+	p .track{
+	}
+}
+
+/* media queries */
+
+@media only screen and (max-width: 480px) {
+	@imgsize: 125px;
+	@width: 480px;
+
+	#juke{
+		width: @width;
+		font-size: 12px;
+	}
+	#playhead{
+		margin-left: 50%;
+		left: -65px;
+		z-index:20;
+	}
+	#shadowleft{
+		right: ((@width / 2) + (@imgsize / 2)) + 1;
+	}
+	#shadowright{
+		left: ((@width / 2) + (@imgsize / 2)) + 1;
+	}
+	#displaybox{
+		width: @width;
+		height: 150px;
+		overflow:hidden;
+		top: 0px;
+		position:relative;
+	}
+	#displaybox>img{
+		position: absolute;
+		top: 0px;
+		height: 125px;
+		width: @width;
+	}
+	#displaybox_overlay img{
+		z-index: 5;
+		top: 0px;
+		height: 125px;
+		width: @width;
+		position: absolute;
+	}
+	#tapebox{
+		position: absolute;
+		height: 125px;
+		width: 2000px;
+		left: ((@width / 2) - (@imgsize / 2)) + 12.5;
+		top: 0px;
+		color: transparent;
+	}
+	.filler{
+		width: (175 - @imgsize + ((@width / 2) - (@imgsize / 2)) + 12.5) / 2 !important;
+	}
+	#tapebox li{
+		list-style: none;
+		display: inline-block;
+		float: left;
+		margin: 0px;
+		padding: 0px;
+		width: @imgsize;
+	}
+	.tooltip {
+		display:none !important;
+	}
+}
+
+/*
+ SoundManager 2 + useFlashBlock
+ Flash positioning and flashblock / clicktoflash handling
+*/
+
+#sm2-container {
+ /*
+  where the SM2 flash movie goes. by default, relative container.
+  set relative or absolute here, and don't touch it later or bad things will happen (see below comments.)
+ */
+ position:relative;
+ width:1px;
+ height:1px;
+ _overflow:hidden; /* screw IE 6, just make it display nice */
+}
+
+#sm2-container object,
+#sm2-container embed {
+ /*
+  the actual movie bit.
+  SWF needs to be able to be moved off-screen without display: or position: changes. important.
+  changing display: or position: or overflow: here or on parent can cause SFW reload or other weird issues after unblock,
+  eg. SM2 starts but strange errors, no whileplaying() etc.
+ */
+ position:absolute;
+}
+
+#sm2-container object,
+#sm2-container embed,
+#sm2-container.swf_timedout,
+#sm2-container.swf_timedout object,
+#sm2-container.swf_timedout embed {
+ /* 
+  when SM2 didn't start normally, time-out case. flash blocked, missing SWF, no flash?
+  48px square flash placeholder is typically used by blockers.
+ */
+ left:auto;
+ top:auto;
+ width:48px;
+ height:48px;
+}
+
+#sm2-container.swf_unblocked {
+ /* SWF unblocked, or was never blocked to begin with; try to collapse container as much as possible. */
+ width:1px;
+ height:1px;
+}
+
+#sm2-container.swf_loaded object,
+#sm2-container.swf_loaded embed,
+#sm2-container.swf_unblocked object,
+#sm2-container.swf_unblocked embed {
+ /* hide flash off-screen (relative to container) when it has loaded OK */
+ left:-9999em;
+ top:-9999em;
+}
+
+#sm2-container.swf_error {
+ /* when there is a fatal error (flash loaded, but SM2 failed) */
+ display:none;
+}
+
+#sm2-container.high_performance {
+ /* "high performance" case: keep on-screen at all times */
+ position:absolute;
+ position:fixed;
+ _top:-9999px; /* IE 6 hax, no position:fixed */
+ _left:-9999px;
+ bottom:0px;
+ left:0px;
+ /*
+  special case: show at first with w/h, hide when unblocked.
+  might be bad/annoying.
+ */
+ width:48px;
+ height:48px;
+ z-index:99; /* try to stay on top */
+}
+
+#sm2-container.high_performance.swf_unblocked {
+ z-index:auto;
+}
+
+#sm2-container.high_performance.swf_unblocked,
+#sm2-container.high_performance.swf_unblocked object,
+#sm2-container.high_performance.swf_unblocked embed {
+ /* 8x8px is required minimum to load in fx/win32 in some cases(?), 6x6+ good for fast performance, even better when on-screen via position:fixed */
+ width:8px;
+ height:8px;
+}
+
+#sm2-container.high_performance.swf_unblocked object,
+#sm2-container.high_performance.swf_unblocked embed {
+ /* high-performance case must stay on-screen */
+ left:auto;
+ top:auto;
+}
+
+#sm2-container.high_performance.swf_timedout {
+ z-index:99; /* try to stay on top */
+}

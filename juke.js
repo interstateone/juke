@@ -14,9 +14,13 @@
 				return (/^[\],:{}\s]*$/).test(str);
 			}
 
+			function isTouchDevice() {
+			    return "ontouchstart" in window;
+			}
+
 			// load trackinfo JSON as string or from URL
 			if(isJSON(option.trackinfo)){
-				trackInfo = $.parseJSON(option.trackinfo);
+			trackInfo = $.parseJSON(option.trackinfo);
 			} else {
 				trackInfo = (function () {
 					var json = null;
@@ -44,11 +48,11 @@
 			elem.children().wrapAll('<ul id="tapebox"/>');
 			// prepend the placeholder to the list
 			$("#tapebox").wrapAll('<div id="displaybox"/>');
-			$("#tapebox").prepend('<li style="width: 125px"><img src="'+ option.placeholder +'" width="125"></li><li style="width: 125px">&nbsp;</li><li style="width: 125px">&nbsp;</li>');
+			$("#tapebox").prepend('<li><img src="'+ option.placeholder +'" width="125"></li><li class="filler">&nbsp;</li><li class="filler">&nbsp;</li>');
 			// prepend the bg image
 			$("#displaybox").prepend('<img src="'+ option.imagesFolder +'bg.png" alt="">');
 			// add the other structure around the list
-			elem.prepend('<div id="shadowleft" class="shadow"></div><div id="playhead"><img src="'+ option.imagesFolder +'playhead_overlay.png"><div id="playtoggle" class="hover"></div></div><div id="shadowright" class="shadow"></div>');
+			elem.prepend('<div id="shadowleft" class="shadow"></div><div id="shadowright" class="shadow"></div><div id="playhead"><img src="'+ option.imagesFolder +'playhead_overlay.png"><div id="playtoggle" class="hover"></div></div>');
 			elem.append('<div id="displaybox_overlay"><img src="'+ option.imagesFolder +'displaybox_overlay.png" /></div>');
 
 			if(option.tooltips){
@@ -61,6 +65,7 @@
 				soundManager.url 			= option.soundmanagerFolder + 'soundmanager2_flash_xdomain/';
 				soundManager.useHTML5Audio 	= true;
 				soundManager.useFlashBlock 	= true;
+				soundManager.consoleOnly	= true;
 				soundManager.debugMode 		= option.debug;
 				soundManager.wmode 			= 'transparent';
 
@@ -134,7 +139,7 @@
 						soundManager.togglePause("juke");
 					});
 
-					if(option.tooltips){
+					if(option.tooltips && !isTouchDevice()){
 						$("#playhead").hover(function(){
 							$(".tooltip").fadeIn(100);
 						}, function(){
