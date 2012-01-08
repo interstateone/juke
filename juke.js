@@ -4,7 +4,7 @@
 		option = $.extend({}, $.fn.juke.option, option);
 
 		return this.each(function() {    
-			var loadingIndicator, positionIndicator, timeleft, manualSeek = false, currentTrack = 1, currentMarker, nextMarker, numTracks, currentArt, rem, pos, mins, secs, cur, percentLoaded, duration, title = document.title, artList, trackinfo, elem = $(this);
+			var loadingIndicator, positionIndicator, timeleft, manualSeek = false, currentTrack = 1, currentMarker, nextMarker, numTracks, currentArt, rem, pos, mins, secs, cur = 0, percentLoaded, duration, title = document.title, artList, trackinfo, elem = $(this);
 
 			function isJSON(str) {
 				if (str.length === 0) return false;
@@ -37,11 +37,11 @@
 				})();
 			}
 
-			duration = trackInfo.duration;
+			duration = parseInt(trackInfo.duration);
 			trackInfo = trackInfo.tracks;
-			currentMarker = trackInfo[currentTrack - 1].marker;
-			nextMarker = trackInfo[currentTrack].marker;
-			numTracks = trackInfo.length;
+			currentMarker = parseInt(trackInfo[currentTrack - 1].marker);
+			nextMarker = parseInt(trackInfo[currentTrack].marker);
+			numTracks = parseInt(trackInfo.length);
 
 			// setup the DOM structure inside empty div
 			// wrap the albumart list
@@ -54,10 +54,14 @@
 			// add the other structure around the list
 			elem.prepend('<div id="shadowleft" class="shadow"></div><div id="shadowright" class="shadow"></div><div id="playhead"><img src="'+ option.imagesFolder +'playhead_overlay.png"><div id="playtoggle" class="hover"></div></div>');
 			elem.append('<div id="displaybox_overlay"><img src="'+ option.imagesFolder +'displaybox_overlay.png" /></div>');
-
 			if(option.tooltips){
 				$("#playhead").append('<div class="tooltip">'+ option.title +'</div>');
 			}
+			if(option.debug){
+				$("#juke").append('<span id="skipbackward">REV</span>&nbsp;-&nbsp;<span id="skipforward">FWD</span>');
+			}
+
+			var tapebox = $("#tapebox"), playtoggle = $("#playtoggle");
 
 			// Soundmanager stuff
 			// Make sure that SM2 is included and initialized
@@ -75,32 +79,24 @@
 						url: $.trim(option.audio),
 						autoLoad: true,
 						onplay: function(){
-							$("#playtoggle").addClass('playing');
+							playtoggle.addClass('playing');
 							document.title = "\u25B6 "+ option.title +" - " + title;
-							$("#tapebox").animate({"left":"-200px"}, option.animationSpeed, "swing");
-						
-							if(option.tooltips) $(".tooltip").html("<p>"+ trackInfo[currentTrack-1].artist +"</p><p class='track'>"+ trackInfo[currentTrack-1].track +"</p>");
-						},
-						onresume: function(){
-							$("#playtoggle").addClass('playing');
-							document.title = "\u25B6 "+ option.title +" - " + title;
+							if(cur === 0){
+								tapebox.animate({"left":"-200px"}, option.animationSpeed, "swing");
+							
+								if(option.tooltips) $(".tooltip").html("<p>"+ trackInfo[currentTrack-1].artist +"</p><p class='track'>"+ trackInfo[currentTrack-1].track +"</p>");	
+							}
 						},
 						onpause: function(){
-							$("#playtoggle").removeClass('playing');
+							playtoggle.removeClass('playing');
 							document.title = title;
 						},
 						onfinish: function(){
-							$("#playtoggle").removeClass('playing');
+							playtoggle.removeClass('playing');
 							document.title = title;
 						},
 						whileplaying: function(){
-							//rem = parseInt(duration - soundManager.getSoundById("juke").position/1000, 10);
-							//pos = ((soundManager.getSoundById("juke").position/1000) / duration) * 100;
-							//mins = Math.floor(rem/60,10);
-							//secs = rem - mins*60;
-							cur = parseInt(soundManager.getSoundById("juke").position/1000, 10);
-						
-							//console.log("total: "+duration+", currently at: "+cur+", next marker: "+nextMarker);
+							cur = parseInt(soundManager.getSoundById("juke").position/1000);
 
 							// are we done?
 							if(cur >= duration){
@@ -109,17 +105,14 @@
 
 							// check to see if we've changed songs
 							if(cur >= nextMarker){
-
-								// make sure we're up to speed
+								// make sure we're up to speed (for cases where playhead is manually advanced multiple tracks)
 								while(cur >= nextMarker){
-
 									currentTrack++;
-
 									// are we on the last song?
 									// if not then increment the markers
 									if(currentTrack < numTracks){
 										currentMarker = nextMarker;
-										nextMarker = trackInfo[currentTrack].marker;
+										nextMarker = parseInt(trackInfo[currentTrack].marker);
 									} else {
 										nextMarker = duration;
 										break;
@@ -128,16 +121,27 @@
 
 								// now need to advance the album art and update the tooltip
 								if(currentTrack <= numTracks){
-									$("#tapebox").animate({ "left" : "-=125px" }, option.animationSpeed, "swing");
+									tapebox.animate({ "left" : "-=125px" }, option.animationSpeed, "swing");
 									if(option.tooltips) $(".tooltip").html("<p>"+ trackInfo[currentTrack-1].artist +"</p><p class='track'>"+ trackInfo[currentTrack-1].track +"</p>");
 								}
 							}
+
+							if(option.debug) console.log("total: "+duration+", currently at: "+cur+", next marker: "+nextMarker);
 						}
 					});
 
 					$("#playtoggle").click(function() {	
 						soundManager.togglePause("juke");
 					});
+
+					if(option.debug){
+						$("#skipforward").click(function(){
+							soundManager.getSoundById("juke").setPosition(soundManager.getSoundById("juke").position + 5000);
+						});
+						$("#skipbackward").click(function(){
+							soundManager.getSoundById("juke").setPosition(soundManager.getSoundById("juke").position - 5000);
+						});
+					}
 
 					if(option.tooltips && !isTouchDevice()){
 						$("#playhead").hover(function(){
@@ -146,6 +150,9 @@
 							$(".tooltip").fadeOut(100);
 						});
 					}
+
+					// It's alive!!!
+					$("#juke").css("visibility", "visible");
 				});
 			} else {
 				if (option.debug){

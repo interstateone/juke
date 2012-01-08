@@ -6,6 +6,8 @@
     opacity: 		@value;         					// CSS standard
 }
 
+/* Full size */
+
 @imgsize: 125px;
 @width: 500px;
 
@@ -13,9 +15,15 @@
 	position:relative;
 	width: @width;
 	font-size: 12px;
+	visibility: hidden;
 }
-#juke ul{ margin:0; padding:0;}
-#juke ul li:before{ content: none; }
+#juke ul{
+	margin:0;
+	padding:0;
+}
+#juke ul li:before{
+	content: none;
+}
 #playhead{
 	display:block;
 	position:absolute;
@@ -64,7 +72,7 @@
 #tapebox{
 	position:absolute;
 	height:150px;
-	width:2000px;
+	width: 3000px;
 	left: ((@width / 2) - (@imgsize / 2)) + 12.5;
 	top:0px;
 	color:transparent;
@@ -105,7 +113,9 @@
 	}
 }
 
-/* media queries */
+/* Media queries */
+
+/* iPhone size */
 
 @media only screen and (max-width: 480px) {
 	@imgsize: 125px;
