@@ -3,7 +3,7 @@
 		// override defaults with specified option
 		option = $.extend({}, $.fn.juke.option, option);
 
-		function isJSON(str) {
+		var isJSON = function(str) {
 			if (str.length === 0) {
 				return false;
 			}
@@ -11,12 +11,12 @@
 			str = str.replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']');
 			str = str.replace(/(?:^|:|,)(?:\s*\[)+/g, '');
 			return (/^[\],:{}\s]*$/).test(str);
-		}
+		};
 
 		// From Modernizr.js
-		function isTouchDevice() {
+		var isTouchDevice = function() {
 			return "ontouchstart" in window;
-		}
+		};
 
 		return this.each(function() {    
 			var loadingIndicator,
@@ -51,6 +51,26 @@
 				tapebox.css({left: tapeOffset});
 			};
 
+			var getMarker = function(index) {
+				var marker = trackInfo[index].marker,
+					testPattern = /:/, // Check for a colon
+					minutePattern = /^\d*(?=:)/, // Find the digits at the start and before ':'
+					secondPattern = /[0-5][0-9]$/, // Find the two digits at the end (00 - 59)
+					min,
+					sec; 
+				
+				// If the marker is formatted as xx:xx then convert it to raw seconds
+				if (testPattern.test(marker)) {
+					min = parseInt(minutePattern.exec(marker), 10);
+					sec = parseInt(secondPattern.exec(marker), 10);
+					return min * 60 + sec;
+				}
+				// Otherwise treat it as raw seconds
+				else {
+					return parseInt(trackInfo[index].marker, 10);
+				}
+			};
+
 			// load trackinfo JSON as string or from URL
 			if(isJSON(option.trackinfo)){
 				trackInfo = $.parseJSON(option.trackinfo);
@@ -72,8 +92,8 @@
 
 			duration = parseInt(trackInfo.duration, 10);
 			trackInfo = trackInfo.tracks;
-			currentMarker = parseInt(trackInfo[currentTrack - 1].marker, 10);
-			nextMarker = parseInt(trackInfo[currentTrack].marker, 10);
+			currentMarker = getMarker(currentTrack - 1);
+			nextMarker = getMarker(currentTrack);
 			numTracks = parseInt(trackInfo.length, 10);
 
 			// setup the DOM structure inside empty div
@@ -153,8 +173,8 @@
 									// are we on the last song?
 									// if not then increment the markers
 									if(currentTrack < numTracks){
-										currentMarker = nextMarker;
-										nextMarker = parseInt(trackInfo[currentTrack].marker, 10);
+										currentMarker = nextMarker;	
+										nextMarker = getMarker(currentTrack);
 									} else {
 										nextMarker = duration;
 										break;

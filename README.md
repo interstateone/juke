@@ -1,6 +1,6 @@
 Juke is the best way to show off your mixtapes.
 
-It runs on [jQuery](http://jquery.com/) and [SoundManager 2](http://www.schillmania.com/projects/soundmanager2/) libraries. The sound goes through Flash 8+ or &lt;audio&gt;, and SoundManager handles all of that (it's *amazing*), so it works on almost any device.
+It runs on [jQuery](http://jquery.com/) and [SoundManager 2](http://www.schillmania.com/projects/soundmanager2/). The sound goes through Flash 8+ or &lt;audio&gt;, and SoundManager handles all of that (it's *amazing*), so it works on almost any device.
 
 How to use Juke
 ---------------
@@ -47,11 +47,11 @@ Configuration Options
 - **animationSpeed** Speed of album art animation (in milliseconds)
 - **debug** Spits out lots of stuff to the console
 
-Juke uses a JSON object to store global and track metadata. This includes a start marker (in seconds), artist name and track name for each track. The JSON object can be passed to Juke as a string or as a URL to a file with this information. This part of Juke is a bit tedious right now, and it can take some testing to get the album art to advance right when you want.
+Juke uses a JSON object to store global and track metadata. This includes a start marker, artist name and track name for each track. The JSON object can be passed to Juke as a string or as a URL to a file with this information. You can format the markers as raw seconds or "mm:ss".
 
 <pre>
 {
-	"duration": "500",
+	"duration": "8:20",
 	"tracks":
 	[
 		{
@@ -65,7 +65,7 @@ Juke uses a JSON object to store global and track metadata. This includes a star
 			"track": "Jamelia (Gold Panda Remix)"
 		},
 		{
-			"marker": "310",
+			"marker": "5:10",
 			"artist": "Gil Scott-Heron and Jamie XX",
 			"track": "Running"
 		}
