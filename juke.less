@@ -1,3 +1,5 @@
+/* LESS Functions */
+
 .opacity(@value: 0.5) {
     -khtml-opacity: @value;  							// some pre-2004 browsers
     -moz-opacity: 	@value;    							// really old FF versions
@@ -6,14 +8,11 @@
     opacity: 		@value;         					// CSS standard
 }
 
-/* Full size */
-
-@imgsize: 125px;
-@width: 500px;
+/* Main Styles */
 
 #juke{
 	position:relative;
-	width: @width;
+	width: 100%;
 	font-size: 12px;
 	visibility: hidden;
 }
@@ -45,14 +44,12 @@
 }
 #shadowleft{
 	left: 0px;
-	right: ((@width / 2) + (@imgsize / 2)) + 1;
 }
 #shadowright{
-	left: ((@width / 2) + (@imgsize / 2)) + 1;
 	right: 0px;
 }
 #displaybox{
-	width: @width;
+	width: 100%;
 	height:150px;
 	overflow:hidden;
 	top:0px;
@@ -60,25 +57,25 @@
 }
 #displaybox>img{
 	height: 125px;
-	width: @width;
+	width: 100%;
 }
 #displaybox_overlay img{
 	z-index: 5;
 	top: 0px;
 	position: absolute;
 	height: 125px;
-	width: @width;
+	width: 100%;
 }
 #tapebox{
 	position:absolute;
 	height:150px;
 	width: 3000px;
-	left: ((@width / 2) - (@imgsize / 2)) + 12.5;
 	top:0px;
 	color:transparent;
+	text-indent: 0;
 }
 .filler{
-	width: ((@width / 2) - (@imgsize / 2)) + 75 + 12.5 !important;
+	width: 125px;
 }
 #tapebox li{
 	list-style:none;
@@ -86,7 +83,7 @@
 	float:left;
 	margin:0px;
 	padding:0px;
-	width: @imgsize;
+	width: 125px;
 }
 .tooltip {
 	display:none;
@@ -109,47 +106,8 @@
 		line-height: 10px;
 		.opacity(1);
 	}
-	p .track{
-	}
-}
-
-/* Media queries */
-
-/* iPhone size */
-
-@media only screen and (max-width: 480px) {
-	@imgsize: 125px;
-	@width: 480px;
-
-	#juke{
-		width: @width;
-	}
-	#shadowleft{
-		right: ((@width / 2) + (@imgsize / 2)) + 1;
-	}
-	#shadowright{
-		left: ((@width / 2) + (@imgsize / 2)) + 1;
-	}
-	#displaybox{
-		width: @width;
-	}
-	#displaybox>img{
-		width: @width;
-	}
-	#displaybox_overlay img{
-		width: @width;
-	}
-	#tapebox{
-		left: ((@width / 2) - (@imgsize / 2)) + 12.5;
-	}
-	.filler{
-		width: ((@width / 2) - (@imgsize / 2)) + 75 + 12.5 !important;
-	}
-	#tapebox li{
-		width: @imgsize;
-	}
-	.tooltip {
-		display:none !important;
+	em {
+		font-style: oblique;
 	}
 }
 

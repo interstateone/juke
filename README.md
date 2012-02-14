@@ -1,4 +1,4 @@
-Juke is a jQuery plugin that lets people listen to your mixes while it flips through the album art for each track.
+Juke is the best way to show off your mixtapes.
 
 It runs on [jQuery](http://jquery.com/) and [SoundManager 2](http://www.schillmania.com/projects/soundmanager2/) libraries. The sound goes through Flash 8+ or &lt;audio&gt;, and SoundManager handles all of that (it's *amazing*), so it works on almost any device.
 

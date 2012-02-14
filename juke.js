@@ -3,24 +3,57 @@
 		// override defaults with specified option
 		option = $.extend({}, $.fn.juke.option, option);
 
+		function isJSON(str) {
+			if (str.length === 0) {
+				return false;
+			}
+			str = str.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@');
+			str = str.replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']');
+			str = str.replace(/(?:^|:|,)(?:\s*\[)+/g, '');
+			return (/^[\],:{}\s]*$/).test(str);
+		}
+
+		// From Modernizr.js
+		function isTouchDevice() {
+			return "ontouchstart" in window;
+		}
+
 		return this.each(function() {    
-			var loadingIndicator, positionIndicator, timeleft, manualSeek = false, currentTrack = 1, currentMarker, nextMarker, numTracks, currentArt, rem, pos, mins, secs, cur = 0, percentLoaded, duration, title = document.title, artList, trackinfo, elem = $(this);
+			var loadingIndicator,
+				positionIndicator,
+				timeleft,
+				manualSeek = false,
+				currentTrack = 1,
+				currentMarker,
+				nextMarker,
+				numTracks,
+				cur = 0,
+				percentLoaded,
+				duration,
+				title = document.title,
+				artList,
+				trackInfo,
+				elem = $(this),
+				tapebox,
+				playtoggle,
+				shadowleft,
+				shadowright,
+				tapeOffset;
 
-			function isJSON(str) {
-				if (str.length === 0) return false;
-				str = str.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@');
-				str = str.replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']');
-				str = str.replace(/(?:^|:|,)(?:\s*\[)+/g, '');
-				return (/^[\],:{}\s]*$/).test(str);
-			}
-
-			function isTouchDevice() {
-			    return "ontouchstart" in window;
-			}
+			// Update the element alignment if the window is resized
+			window.onresize = function() {
+				shadowleft.css({right: shadowleft.parent().width() / 2 + 63});
+				shadowright.css({left: shadowright.parent().width() / 2 + 64});
+				tapeOffset = tapebox.parent().width() / 2 - 62;
+				if (cur > 0) {
+					tapeOffset -= 250 + currentTrack * 125;
+				}
+				tapebox.css({left: tapeOffset});
+			};
 
 			// load trackinfo JSON as string or from URL
 			if(isJSON(option.trackinfo)){
-			trackInfo = $.parseJSON(option.trackinfo);
+				trackInfo = $.parseJSON(option.trackinfo);
 			} else {
 				trackInfo = (function () {
 					var json = null;
@@ -37,20 +70,23 @@
 				})();
 			}
 
-			duration = parseInt(trackInfo.duration);
+			duration = parseInt(trackInfo.duration, 10);
 			trackInfo = trackInfo.tracks;
-			currentMarker = parseInt(trackInfo[currentTrack - 1].marker);
-			nextMarker = parseInt(trackInfo[currentTrack].marker);
-			numTracks = parseInt(trackInfo.length);
+			currentMarker = parseInt(trackInfo[currentTrack - 1].marker, 10);
+			nextMarker = parseInt(trackInfo[currentTrack].marker, 10);
+			numTracks = parseInt(trackInfo.length, 10);
 
 			// setup the DOM structure inside empty div
 			// wrap the albumart list
 			elem.children().wrapAll('<ul id="tapebox"/>');
+
 			// prepend the placeholder to the list
 			$("#tapebox").wrapAll('<div id="displaybox"/>');
-			$("#tapebox").prepend('<li><img src="'+ option.placeholder +'" width="125"></li><li class="filler">&nbsp;</li>');
+			$("#tapebox").prepend('<li><img src="'+ option.placeholder +'" width="125"></li><li class="filler">&nbsp;</li><li class="filler">&nbsp;</li>');
+			
 			// prepend the bg image
 			$("#displaybox").prepend('<img src="'+ option.imagesFolder +'bg.png" alt="">');
+			
 			// add the other structure around the list
 			elem.prepend('<div id="shadowleft" class="shadow"></div><div id="shadowright" class="shadow"></div><div id="playhead"><img src="'+ option.imagesFolder +'playhead_overlay.png"><div id="playtoggle" class="hover"></div></div>');
 			elem.append('<div id="displaybox_overlay"><img src="'+ option.imagesFolder +'displaybox_overlay.png" /></div>');
@@ -61,20 +97,23 @@
 				$("#juke").append('<span id="skipbackward">REV</span>&nbsp;-&nbsp;<span id="skipforward">FWD</span>');
 			}
 
-			var tapebox = $("#tapebox"), playtoggle = $("#playtoggle");
+			shadowleft = $("#shadowleft");
+			shadowright = $("#shadowright");
+			tapebox = $("#tapebox");
+			playtoggle = $("#playtoggle");
 
 			// Soundmanager stuff
 			// Make sure that SM2 is included and initialized
 			if(soundManager){
-				soundManager.url 			= option.soundmanagerFolder + 'soundmanager2_flash_xdomain/';
-				soundManager.useHTML5Audio 	= true;
-				soundManager.useFlashBlock 	= true;
-				soundManager.consoleOnly	= true;
-				soundManager.debugMode 		= option.debug;
-				soundManager.wmode 			= 'transparent';
+				soundManager.url           = option.soundmanagerFolder + 'soundmanager2_flash_xdomain/';
+				soundManager.useHTML5Audio = true;
+				soundManager.useFlashBlock = true;
+				soundManager.consoleOnly   = true;
+				soundManager.debugMode     = option.debug;
+				soundManager.wmode         = 'transparent';
 
 				soundManager.onready(function(){
-					sm = soundManager.createSound({
+					var sm = soundManager.createSound({
 						id: "juke",
 						url: $.trim(option.audio),
 						autoLoad: true,
@@ -82,9 +121,12 @@
 							playtoggle.addClass('playing');
 							document.title = "\u25B6 "+ option.title +" - " + title;
 							if(cur === 0){
-								tapebox.animate({"left":"-200px"}, option.animationSpeed, "swing");
+								tapeOffset = tapebox.parent().width() / 2 - 62 - 375;
+								tapebox.animate({"left": tapeOffset}, option.animationSpeed, "swing");
 							
-								if(option.tooltips) $(".tooltip").html("<p>"+ trackInfo[currentTrack-1].artist +"</p><p class='track'>"+ trackInfo[currentTrack-1].track +"</p>");	
+								if(option.tooltips) {
+									$(".tooltip").html("<p>"+ trackInfo[currentTrack-1].artist +"</p><em class='track'>"+ trackInfo[currentTrack-1].track +"</em>");
+								}
 							}
 						},
 						onpause: function(){
@@ -96,7 +138,7 @@
 							document.title = title;
 						},
 						whileplaying: function(){
-							cur = parseInt(soundManager.getSoundById("juke").position/1000);
+							cur = parseInt(soundManager.getSoundById("juke").position/1000, 10);
 
 							// are we done?
 							if(cur >= duration){
@@ -112,7 +154,7 @@
 									// if not then increment the markers
 									if(currentTrack < numTracks){
 										currentMarker = nextMarker;
-										nextMarker = parseInt(trackInfo[currentTrack].marker);
+										nextMarker = parseInt(trackInfo[currentTrack].marker, 10);
 									} else {
 										nextMarker = duration;
 										break;
@@ -122,11 +164,15 @@
 								// now need to advance the album art and update the tooltip
 								if(currentTrack <= numTracks){
 									tapebox.animate({ "left" : "-=125px" }, option.animationSpeed, "swing");
-									if(option.tooltips) $(".tooltip").html("<p>"+ trackInfo[currentTrack-1].artist +"</p><p class='track'>"+ trackInfo[currentTrack-1].track +"</p>");
+									if(option.tooltips) {
+										$(".tooltip").html("<p>"+ trackInfo[currentTrack-1].artist +"</p><em class='track'>"+ trackInfo[currentTrack-1].track +"</em>");
+									}
 								}
 							}
 
-							if(option.debug) console.log("total: "+duration+", currently at: "+cur+", next marker: "+nextMarker);
+							if(option.debug) {
+								console.log("total: "+duration+", currently at: "+cur+", next marker: "+nextMarker);
+							}
 						}
 					});
 
@@ -152,6 +198,11 @@
 					}
 
 					// It's alive!!!
+					// Make sure the elements are aligned properly for the width of the div
+					// Show the juke <div> once all of the elements are in place
+					shadowleft.css({right: shadowleft.parent().width() / 2 + 63});
+					shadowright.css({left: shadowright.parent().width() / 2 + 64});
+					tapebox.css({left: tapebox.parent().width() / 2 - 62});
 					$("#juke").css("visibility", "visible");
 				});
 			} else {
@@ -163,14 +214,14 @@
 	};
 
 	$.fn.juke.option = {
-		title: 				"Mixtape",
-		imagesFolder: 		"public/images/juke/", 
+		title: "Mixtape",
+		imagesFolder: "public/images/juke/", 
 		soundmanagerFolder: "public/swf/",
-		placeholder: 		"images/juke/default.jpg",
-		trackinfo: 			"trackinfo.json",
-		audio: 				"mix.mp3",
-		tooltips: 			false,
-		animationSpeed: 	400,
-		debug: 				false
+		placeholder: "images/juke/default.jpg",
+		trackinfo: "trackinfo.json",
+		audio: "mix.mp3",
+		tooltips: false,
+		animationSpeed: 400,
+		debug: false
 	};
 })(jQuery);
