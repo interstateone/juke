@@ -38,15 +38,18 @@
 				playtoggle,
 				shadowleft,
 				shadowright,
-				tapeOffset;
+				tapeOffset,
+				fillerWidth = $("#juke").width() / 2 - 62;
 
 			// Update the element alignment if the window is resized
 			window.onresize = function() {
 				shadowleft.css({right: shadowleft.parent().width() / 2 + 63});
 				shadowright.css({left: shadowright.parent().width() / 2 + 64});
+				fillerWidth = $("#juke").width() / 2 - 62;
+				$(".filler").width(fillerWidth);
 				tapeOffset = tapebox.parent().width() / 2 - 62;
 				if (cur > 0) {
-					tapeOffset -= 250 + currentTrack * 125;
+					tapeOffset -= fillerWidth + currentTrack * 125;
 				}
 				tapebox.css({left: tapeOffset});
 			};
@@ -102,7 +105,7 @@
 
 			// prepend the placeholder to the list
 			$("#tapebox").wrapAll('<div id="displaybox"/>');
-			$("#tapebox").prepend('<li><img src="'+ option.placeholder +'" width="125"></li><li class="filler">&nbsp;</li><li class="filler">&nbsp;</li>');
+			$("#tapebox").prepend('<li><img src="'+ option.placeholder +'" width="125"></li><li class="filler">&nbsp;</li>');
 			
 			// prepend the bg image
 			$("#displaybox").prepend('<img src="'+ option.imagesFolder +'bg.png" alt="">');
@@ -141,7 +144,7 @@
 							playtoggle.addClass('playing');
 							document.title = "\u25B6 "+ option.title +" - " + title;
 							if(cur === 0){
-								tapeOffset = tapebox.parent().width() / 2 - 62 - 375;
+								tapeOffset = tapebox.parent().width() / 2 - 62 - fillerWidth - 125;
 								tapebox.animate({"left": tapeOffset}, option.animationSpeed, "swing");
 							
 								if(option.tooltips) {
@@ -220,6 +223,7 @@
 					// It's alive!!!
 					// Make sure the elements are aligned properly for the width of the div
 					// Show the juke <div> once all of the elements are in place
+					$(".filler").width(fillerWidth);
 					shadowleft.css({right: shadowleft.parent().width() / 2 + 63});
 					shadowright.css({left: shadowright.parent().width() / 2 + 64});
 					tapebox.css({left: tapebox.parent().width() / 2 - 62});
