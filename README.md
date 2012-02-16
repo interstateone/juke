@@ -1,6 +1,6 @@
 Juke is the best way to show off your mixtapes.
 
-It runs on [jQuery](http://jquery.com/) and [SoundManager 2](http://www.schillmania.com/projects/soundmanager2/). The sound goes through Flash 8+ or &lt;audio&gt;, and SoundManager handles all of that (it's *amazing*), so it works on almost any device.
+It runs on [jQuery](http://jquery.com/) and [SoundManager 2](http://www.schillmania.com/projects/soundmanager2/). The sound goes through Flash 8+ or &lt;audio&gt;, and SoundManager handles all of that (it's *amazing*), so it works on almost any device. It even provides a link to your visitors' iTunes Store to purchase each track.
 
 How to use Juke
 ---------------
@@ -24,7 +24,8 @@ How to use Juke
 			imagesFolder: 		&quot;public/images/juke/&quot;, 	
 			soundmanagerFolder: &quot;public/swf/&quot;,			 
 			placeholder: 		&quot;images/juke/default.jpg&quot;,
-			trackinfo: 			&quot;trackinfo.json&quot;,			 
+			trackinfo: 			&quot;trackinfo.json&quot;,	
+			itunes:             true,
 			audio: 				&quot;mix.mp3&quot;,				 
 			tooltips: 			false,								 
 			animationSpeed: 	400,								 
@@ -42,6 +43,7 @@ Configuration Options
 - **soundmanagerFolder** Folder of SoundManager2 SWFs
 - **placeholder** Image for mixtape (shown before album art)
 - **trackinfo** JSON-formatted string or URL to file
+- **itunes** Place a localized iTunes Store link beside the track info
 - **audio** URL to audio file (MP3, M4A or WAV)
 - **tooltips** Hover over playhead for track metadata
 - **animationSpeed** Speed of album art animation (in milliseconds)
