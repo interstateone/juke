@@ -8,7 +8,6 @@ How to use Juke
 <pre>
 &lt;link rel=&quot;stylesheet&quot; href=&quot;juke.css&quot; type=&quot;text/css&quot; &gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;jquery.js&quot;&gt;&lt;/script&gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;soundmanager2.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;juke.js&quot;&gt;&lt;/script&gt;
 
 &lt;div id=&quot;juke&quot;&gt;
@@ -24,7 +23,8 @@ How to use Juke
 			imagesFolder: 		&quot;public/images/juke/&quot;, 	
 			soundmanagerFolder: &quot;public/swf/&quot;,			 
 			placeholder: 		&quot;images/juke/default.jpg&quot;,
-			trackinfo: 			&quot;trackinfo.json&quot;,	
+			trackinfo: 			&quot;trackinfo.json&quot;,
+			SM2:                &quot;public/docs/js/min/soundmanager2.min.js&quot;,
 			itunes:             true,
 			audio: 				&quot;mix.mp3&quot;,				 
 			tooltips: 			false,								 
@@ -43,6 +43,7 @@ Configuration Options
 - **soundmanagerFolder** Folder of SoundManager2 SWFs
 - **placeholder** Image for mixtape (shown before album art)
 - **trackinfo** JSON-formatted string or URL to file
+- **SM2** URL to the SoundManager2 library so that Juke can load it
 - **itunes** Place a localized iTunes Store link beside the track info
 - **audio** URL to audio file (MP3, M4A or WAV)
 - **tooltips** Hover over playhead for track metadata

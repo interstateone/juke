@@ -1,4 +1,4 @@
-#juke{position:relative;width:100%;font-size:12px;visibility:hidden;}
+#juke{position:relative;width:100%;font-size:12px;display:none;}
 #juke ul{margin:0;padding:0;}
 #juke ul li:before{content:none;}
 #playhead{display:block;position:absolute;top:-7px;margin-left:50%;left:-65px;z-index:20;}
