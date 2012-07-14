@@ -242,15 +242,18 @@
             term = encodeURIComponent(artist + " " + track);
             queryString = "http://itunes.apple.com/search?entity=song&country=" + countryCode + "&term=" + term + "&limit=5&callback=?";
             return $.getJSON(queryString, function(data) {
-              var link;
-              if (data.resultCount === 1) {
-                link = data.results[0].trackViewUrl;
-              } else if (data.resultCount > 1) {
-                $.each(data.results, function(index, result) {
-                  if (track === result.trackName) {
-                    return link = result.trackViewUrl;
-                  }
-                });
+              var link, result;
+              if ((function() {
+                var _i, _len, _ref, _results;
+                _ref = data.results;
+                _results = [];
+                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                  result = _ref[_i];
+                  _results.push(track === result.trackName);
+                }
+                return _results;
+              })()) {
+                link = result.trackViewUrl;
               }
               if (link != null) {
                 newString += " (<a href='" + link + "' class='itunes-link'>iTunes</a>)";
