@@ -98,8 +98,8 @@
       this.$elem.children().wrapAll('<ul id="tapebox"/>');
       this.tapebox = $("#tapebox");
       $("#tapebox").wrapAll('<div id="displaybox"/>');
-      $("#tapebox").prepend('<li><img src="' + this.settings.placeholder + '" width="125"></li>');
-      $("#displaybox").prepend('<img src="' + this.settings.imagesFolder + 'bg.png" alt="">');
+      $("#tapebox").prepend("<li><img src='" + this.settings.placeholder + "' width='125'></li>");
+      $("#displaybox").prepend("<img src='" + this.settings.imagesFolder + "bg.png'>");
       this.$elem.prepend("<div id='shadowleft' class='shadow'></div>\n<div id='shadowright' class='shadow'></div>\n<div id='playhead'>\n  <img src='" + this.settings.imagesFolder + "playhead_overlay.png'>\n  <div id='playtoggle' class='hover'></div>\n</div>");
       this.$elem.append("<div id='displaybox_overlay'>\n  <img src='" + this.settings.imagesFolder + "displaybox_overlay.png' />\n</div>");
       if (this.settings.tooltips) {
@@ -231,7 +231,7 @@
     Plugin.prototype.updateInfo = function(artist, track) {
       var newString,
         _this = this;
-      newString = artist + " - <em class='track'>" + track + "</em>";
+      newString = "" + artist + " - <em class='track'>" + track + "</em>";
       if (this.settings.itunes) {
         return $.ajax({
           url: 'http://api.wipmania.com/jsonp?callback=?',

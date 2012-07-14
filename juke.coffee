@@ -79,10 +79,10 @@ class Plugin
 
     # prepend the placeholder to the list
     $("#tapebox").wrapAll '<div id="displaybox"/>'
-    $("#tapebox").prepend '<li><img src="' + @settings.placeholder + '" width="125"></li>'
+    $("#tapebox").prepend "<li><img src='#{ @settings.placeholder }' width='125'></li>"
 
     # prepend the bg image
-    $("#displaybox").prepend '<img src="' + @settings.imagesFolder + 'bg.png" alt="">'
+    $("#displaybox").prepend "<img src='#{ @settings.imagesFolder }bg.png'>"
 
     # add the other structure around the list
     @$elem.prepend """
@@ -192,7 +192,7 @@ class Plugin
   # Updates the new artist and track info
   # Gets a localized iTunes Store link
   updateInfo: (artist, track) ->
-    newString = artist + " - <em class='track'>" + track + "</em>"
+    newString = "#{ artist } - <em class='track'>#{ track }</em>"
 
     if @settings.itunes
       $.ajax
@@ -208,7 +208,7 @@ class Plugin
             if data.resultCount is 1 then link = data.results[0].trackViewUrl
             else if data.resultCount > 1
               $.each data.results, (index, result) => if track is result.trackName then link = result.trackViewUrl
-            if link? then newString += " (<a href='" + link + "' class='itunes-link'>iTunes</a>)"
+            if link? then newString += " (<a href='#{ link }' class='itunes-link'>iTunes</a>)"
             @changeTooltip(newString)
     else
       @changeTooltip(newString)
