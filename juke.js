@@ -70,19 +70,13 @@
         "visibility": "hidden"
       });
       if (this.isJSON(this.settings.trackinfo)) {
-        this.trackInfo = $.parseJSON(this.settings.trackinfo);
+        this.parseTrackInfo($.parseJSON(this.settings.trackinfo));
       } else {
         $.ajax({
           url: this.settings.trackinfo,
           async: false,
           success: function(data) {
-            _this.trackInfo = data;
-            _this.log(_this.trackInfo);
-            _this.duration = _this.parseTime(_this.trackInfo.duration);
-            _this.trackInfo = _this.trackInfo.tracks;
-            _this.currentMarker = _this.getMarker(_this.currentTrack - 1);
-            _this.nextMarker = _this.getMarker(_this.currentTrack);
-            return _this.numTracks = parseInt(_this.trackInfo.length, 10);
+            return _this.parseTrackInfo(data);
           }
         });
       }
@@ -201,6 +195,16 @@
     };
 
     Plugin.prototype.adjustShadows = function() {
+    Plugin.prototype.parseTrackInfo = function(data) {
+      this.trackInfo = data;
+      this.log(this.trackInfo);
+      this.duration = this.parseTime(this.trackInfo.duration);
+      this.trackInfo = this.trackInfo.tracks;
+      this.currentMarker = this.getMarker(this.currentTrack - 1);
+      this.nextMarker = this.getMarker(this.currentTrack);
+      return this.numTracks = parseInt(this.trackInfo.length, 10);
+    };
+
       this.shadowleft.css({
         right: this.shadowleft.parent().width() / 2 + 63
       });

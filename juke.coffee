@@ -52,19 +52,12 @@ class Plugin
       "visibility": "hidden"
 
     # load trackinfo JSON as string or from URL
-    if @isJSON @settings.trackinfo then @trackInfo = $.parseJSON @settings.trackinfo
+    if @isJSON @settings.trackinfo then @parseTrackInfo $.parseJSON @settings.trackinfo
     else
       $.ajax
         url: @settings.trackinfo
         async: false
-        success: (data) =>
-          @trackInfo = data
-          @log @trackInfo
-          @duration = @parseTime @trackInfo.duration
-          @trackInfo = @trackInfo.tracks
-          @currentMarker = @getMarker(@currentTrack - 1)
-          @nextMarker = @getMarker(@currentTrack)
-          @numTracks = parseInt(@trackInfo.length, 10)
+        success: (data) => @parseTrackInfo data
 
     # setup the DOM structure inside empty div
     # wrap the albumart list
@@ -170,6 +163,14 @@ class Plugin
     (/^[\],:{}\s]*$/).test str
 
   adjustShadows: ->
+  parseTrackInfo: (data) ->
+    @trackInfo = data
+    @log @trackInfo
+    @duration = @parseTime @trackInfo.duration
+    @trackInfo = @trackInfo.tracks
+    @currentMarker = @getMarker(@currentTrack - 1)
+    @nextMarker = @getMarker(@currentTrack)
+    @numTracks = parseInt(@trackInfo.length, 10)
     @shadowleft.css({right: @shadowleft.parent().width() / 2 + 63})
     @shadowright.css({left: @shadowright.parent().width() / 2 + 64})
 
