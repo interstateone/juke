@@ -91,9 +91,6 @@
         this.$elem.append("<div class='tooltip'>" + this.settings.title + "</div>");
         this.tooltip = $(".tooltip");
       }
-      if (this.settings.debug) {
-        this.$elem.append('<span id="skipbackward">REV</span>&nbsp;-&nbsp;<span id="skipforward">FWD</span>');
-      }
       this.shadowleft = $("#shadowleft");
       this.shadowright = $("#shadowright");
       this.playtoggle = $("#playtoggle");
@@ -149,6 +146,7 @@
           return soundManager.togglePause("juke");
         });
         if (_this.settings.debug) {
+          _this.$elem.append('<span id="skipbackward">REV</span>&nbsp;-&nbsp;<span id="skipforward">FWD</span>');
           $("#skipforward").click(function() {
             return soundManager.getSoundById("juke").setPosition(soundManager.getSoundById("juke").position + 5000);
           });
@@ -156,21 +154,10 @@
             return soundManager.getSoundById("juke").setPosition(soundManager.getSoundById("juke").position - 5000);
           });
         }
-        _this.adjustShadows();
-        _this.tapebox.css({
-          left: _this.tapebox.parent().width() / 2 - 62
-        });
+        _this.adjustDimensions();
         _this.$elem.css("visibility", "visible");
         return $(window).resize(function() {
-          var tapeOffset;
-          _this.adjustShadows();
-          tapeOffset = _this.tapebox.parent().width() / 2 - 62;
-          if (_this.cur > 0) {
-            tapeOffset -= _this.currentTrack * 125;
-          }
-          return _this.tapebox.css({
-            left: tapeOffset
-          });
+          return _this.adjustDimensions();
         });
       });
       return this;
@@ -194,7 +181,6 @@
       return /^[\],:{}\s]*$/.test(str);
     };
 
-    Plugin.prototype.adjustShadows = function() {
     Plugin.prototype.parseTrackInfo = function(data) {
       this.trackInfo = data;
       this.log(this.trackInfo);
@@ -205,11 +191,20 @@
       return this.numTracks = parseInt(this.trackInfo.length, 10);
     };
 
+    Plugin.prototype.adjustDimensions = function() {
+      var tapeOffset;
       this.shadowleft.css({
         right: this.shadowleft.parent().width() / 2 + 63
       });
-      return this.shadowright.css({
+      this.shadowright.css({
         left: this.shadowright.parent().width() / 2 + 64
+      });
+      tapeOffset = this.tapebox.parent().width() / 2 - 62;
+      if (this.cur > 0) {
+        tapeOffset -= this.currentTrack * 125;
+      }
+      return this.tapebox.css({
+        left: tapeOffset
       });
     };
 

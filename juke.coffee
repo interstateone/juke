@@ -88,8 +88,6 @@ class Plugin
     if @settings.tooltips
       @$elem.append "<div class='tooltip'>#{ @settings.title }</div>"
       @tooltip = $ ".tooltip"
-    if @settings.debug
-      @$elem.append '<span id="skipbackward">REV</span>&nbsp;-&nbsp;<span id="skipforward">FWD</span>'
 
     @shadowleft  = $ "#shadowleft"
     @shadowright = $ "#shadowright"
@@ -134,21 +132,17 @@ class Plugin
       @playtoggle.click -> soundManager.togglePause "juke"
 
       if @settings.debug
+        @$elem.append '<span id="skipbackward">REV</span>&nbsp;-&nbsp;<span id="skipforward">FWD</span>'
         $("#skipforward").click ->
           soundManager.getSoundById("juke").setPosition soundManager.getSoundById("juke").position + 5000
         $("#skipbackward").click ->
           soundManager.getSoundById("juke").setPosition soundManager.getSoundById("juke").position - 5000
 
-      @adjustShadows()
-      @tapebox.css({left: @tapebox.parent().width() / 2 - 62})
+      @adjustDimensions()
       @$elem.css("visibility", "visible")
 
       # Update the element alignment if the window is resized
-      $(window).resize =>
-        @adjustShadows()
-        tapeOffset = @tapebox.parent().width() / 2 - 62
-        if @cur > 0 then tapeOffset -= @currentTrack * 125
-        @tapebox.css {left: tapeOffset}
+      $(window).resize => @adjustDimensions()
 
     @
 
@@ -162,7 +156,6 @@ class Plugin
     str = str.replace /(?:^|:|,)(?:\s*\[)+/g, ''
     (/^[\],:{}\s]*$/).test str
 
-  adjustShadows: ->
   parseTrackInfo: (data) ->
     @trackInfo = data
     @log @trackInfo
@@ -171,8 +164,13 @@ class Plugin
     @currentMarker = @getMarker(@currentTrack - 1)
     @nextMarker = @getMarker(@currentTrack)
     @numTracks = parseInt(@trackInfo.length, 10)
+
+  adjustDimensions: ->
     @shadowleft.css({right: @shadowleft.parent().width() / 2 + 63})
     @shadowright.css({left: @shadowright.parent().width() / 2 + 64})
+    tapeOffset = @tapebox.parent().width() / 2 - 62
+    if @cur > 0 then tapeOffset -= @currentTrack * 125
+    @tapebox.css {left: tapeOffset}
 
   parseTime: (time) ->
     testPattern = /:/
