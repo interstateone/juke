@@ -177,7 +177,9 @@
       return this;
     };
 
-    Plugin.prototype.log = function(msg) {
+    Plugin.prototype.log = function() {
+      var msg;
+      msg = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       if (this.settings.debug) {
         return typeof console !== "undefined" && console !== null ? console.log(msg) : void 0;
       }

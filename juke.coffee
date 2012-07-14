@@ -157,7 +157,7 @@ class Plugin
 
     @
 
-  log: (msg) ->
+  log: (msg...) ->
     console?.log msg if @settings.debug
 
   isJSON: (str) ->
