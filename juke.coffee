@@ -42,12 +42,6 @@ class Plugin
         @init()
 
   init: ->
-    # Update the element alignment if the window is resized
-    $(window).resize ->
-      @adjustDimensions()
-      if @cur > 0 then tapeOffset -= @currentTrack * 125
-      tapebox.css {left: tapeOffset}
-
     @currentTrack = 1
     @cur = 0
     @title = document.title
@@ -75,11 +69,11 @@ class Plugin
     # setup the DOM structure inside empty div
     # wrap the albumart list
     @$elem.children().wrapAll '<ul id="tapebox"/>'
-    @tapebox     = $ "#tapebox"
+    @tapebox = $ "#tapebox"
 
     # prepend the placeholder to the list
-    $("#tapebox").wrapAll '<div id="displaybox"/>'
-    $("#tapebox").prepend "<li><img src='#{ @settings.placeholder }' width='125'></li>"
+    @tapebox.wrapAll '<div id="displaybox"/>'
+    @tapebox.prepend "<li><img src='#{ @settings.placeholder }' width='125'></li>"
 
     # prepend the bg image
     $("#displaybox").prepend "<img src='#{ @settings.imagesFolder }bg.png'>"
@@ -117,8 +111,8 @@ class Plugin
           @playtoggle.addClass 'playing'
           document.title = "\u25B6 " + @settings.title + " - " + @title
           if @cur is 0
-            tapeOffset = @tapebox.parent().width() / 2 - 62 - 125
-            @tapebox.animate {"left": tapeOffset}, @settings.animationSpeed, "swing"
+            @tapeOffset = @tapebox.parent().width() / 2 - 62 - 125
+            @tapebox.animate {"left": @tapeOffset}, @settings.animationSpeed, "swing"
             if @settings.tooltips
               @updateInfo @trackInfo[@currentTrack - 1].artist, @trackInfo[@currentTrack - 1].track
         onpause: =>
@@ -152,8 +146,16 @@ class Plugin
         $("#skipbackward").click ->
           soundManager.getSoundById("juke").setPosition soundManager.getSoundById("juke").position - 5000
 
-      @adjustDimensions()
+      @adjustShadows()
+      @tapebox.css({left: @tapebox.parent().width() / 2 - 62})
       @$elem.css("visibility", "visible")
+
+      # Update the element alignment if the window is resized
+      $(window).resize =>
+        @adjustShadows()
+        tapeOffset = @tapebox.parent().width() / 2 - 62
+        if @cur > 0 then tapeOffset -= @currentTrack * 125
+        @tapebox.css {left: tapeOffset}
 
     @
 
@@ -167,10 +169,9 @@ class Plugin
     str = str.replace /(?:^|:|,)(?:\s*\[)+/g, ''
     (/^[\],:{}\s]*$/).test str
 
-  adjustDimensions: ->
+  adjustShadows: ->
     @shadowleft.css({right: @shadowleft.parent().width() / 2 + 63})
     @shadowright.css({left: @shadowright.parent().width() / 2 + 64})
-    @tapebox.css({left: @tapebox.parent().width() / 2 - 62})
 
   parseTime: (time) ->
     testPattern = /:/

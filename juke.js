@@ -62,15 +62,6 @@
 
     Plugin.prototype.init = function() {
       var _this = this;
-      $(window).resize(function() {
-        this.adjustDimensions();
-        if (this.cur > 0) {
-          tapeOffset -= this.currentTrack * 125;
-        }
-        return tapebox.css({
-          left: tapeOffset
-        });
-      });
       this.currentTrack = 1;
       this.cur = 0;
       this.title = document.title;
@@ -97,8 +88,8 @@
       }
       this.$elem.children().wrapAll('<ul id="tapebox"/>');
       this.tapebox = $("#tapebox");
-      $("#tapebox").wrapAll('<div id="displaybox"/>');
-      $("#tapebox").prepend("<li><img src='" + this.settings.placeholder + "' width='125'></li>");
+      this.tapebox.wrapAll('<div id="displaybox"/>');
+      this.tapebox.prepend("<li><img src='" + this.settings.placeholder + "' width='125'></li>");
       $("#displaybox").prepend("<img src='" + this.settings.imagesFolder + "bg.png'>");
       this.$elem.prepend("<div id='shadowleft' class='shadow'></div>\n<div id='shadowright' class='shadow'></div>\n<div id='playhead'>\n  <img src='" + this.settings.imagesFolder + "playhead_overlay.png'>\n  <div id='playtoggle' class='hover'></div>\n</div>");
       this.$elem.append("<div id='displaybox_overlay'>\n  <img src='" + this.settings.imagesFolder + "displaybox_overlay.png' />\n</div>");
@@ -117,13 +108,12 @@
           id: "juke",
           url: $.trim(_this.settings.audio),
           onplay: function() {
-            var tapeOffset;
             _this.playtoggle.addClass('playing');
             document.title = "\u25B6 " + _this.settings.title + " - " + _this.title;
             if (_this.cur === 0) {
-              tapeOffset = _this.tapebox.parent().width() / 2 - 62 - 125;
+              _this.tapeOffset = _this.tapebox.parent().width() / 2 - 62 - 125;
               _this.tapebox.animate({
-                "left": tapeOffset
+                "left": _this.tapeOffset
               }, _this.settings.animationSpeed, "swing");
               if (_this.settings.tooltips) {
                 return _this.updateInfo(_this.trackInfo[_this.currentTrack - 1].artist, _this.trackInfo[_this.currentTrack - 1].track);
@@ -172,8 +162,22 @@
             return soundManager.getSoundById("juke").setPosition(soundManager.getSoundById("juke").position - 5000);
           });
         }
-        _this.adjustDimensions();
-        return _this.$elem.css("visibility", "visible");
+        _this.adjustShadows();
+        _this.tapebox.css({
+          left: _this.tapebox.parent().width() / 2 - 62
+        });
+        _this.$elem.css("visibility", "visible");
+        return $(window).resize(function() {
+          var tapeOffset;
+          _this.adjustShadows();
+          tapeOffset = _this.tapebox.parent().width() / 2 - 62;
+          if (_this.cur > 0) {
+            tapeOffset -= _this.currentTrack * 125;
+          }
+          return _this.tapebox.css({
+            left: tapeOffset
+          });
+        });
       });
       return this;
     };
@@ -196,15 +200,12 @@
       return /^[\],:{}\s]*$/.test(str);
     };
 
-    Plugin.prototype.adjustDimensions = function() {
+    Plugin.prototype.adjustShadows = function() {
       this.shadowleft.css({
         right: this.shadowleft.parent().width() / 2 + 63
       });
-      this.shadowright.css({
+      return this.shadowright.css({
         left: this.shadowright.parent().width() / 2 + 64
-      });
-      return this.tapebox.css({
-        left: this.tapebox.parent().width() / 2 - 62
       });
     };
 
