@@ -86,7 +86,7 @@
           success: function(data) {
             _this.trackInfo = data;
             _this.log(_this.trackInfo);
-            _this.duration = parseInt(_this.trackInfo.duration, 10);
+            _this.duration = _this.parseTime(_this.trackInfo.duration);
             _this.trackInfo = _this.trackInfo.tracks;
             _this.currentMarker = _this.getMarker(_this.currentTrack - 1);
             _this.nextMarker = _this.getMarker(_this.currentTrack);
@@ -205,19 +205,24 @@
       });
     };
 
-    Plugin.prototype.getMarker = function(index) {
-      var marker, min, minutePattern, sec, secondPattern, testPattern;
-      marker = this.trackInfo[index].marker;
+    Plugin.prototype.parseTime = function(time) {
+      var min, minutePattern, sec, secondPattern, testPattern;
       testPattern = /:/;
       minutePattern = /^\d*(?=:)/;
       secondPattern = /[0-5][0-9]$/;
-      if (testPattern.test(marker)) {
-        min = parseInt(minutePattern.exec(marker), 10);
-        sec = parseInt(secondPattern.exec(marker), 10);
+      if (testPattern.test(time)) {
+        min = parseInt(minutePattern.exec(time), 10);
+        sec = parseInt(secondPattern.exec(time), 10);
         return min * 60 + sec;
       } else {
-        return parseInt(this.trackInfo[index].marker, 10);
+        return parseInt(time, 10);
       }
+    };
+
+    Plugin.prototype.getMarker = function(index) {
+      var marker;
+      marker = this.trackInfo[index].marker;
+      return this.parseTime(marker);
     };
 
     Plugin.prototype.updateInfo = function(artist, track) {

@@ -66,7 +66,7 @@ class Plugin
         success: (data) =>
           @trackInfo = data
           @log @trackInfo
-          @duration = parseInt(@trackInfo.duration, 10)
+          @duration = @parseTime @trackInfo.duration
           @trackInfo = @trackInfo.tracks
           @currentMarker = @getMarker(@currentTrack - 1)
           @nextMarker = @getMarker(@currentTrack)
@@ -172,19 +172,22 @@ class Plugin
     @shadowright.css({left: @shadowright.parent().width() / 2 + 64})
     @tapebox.css({left: @tapebox.parent().width() / 2 - 62})
 
-  # Retrieves track markers
-  getMarker: (index) ->
-    marker = @trackInfo[index].marker
+  parseTime: (time) ->
     testPattern = /:/
     minutePattern = /^\d*(?=:)/
     secondPattern = /[0-5][0-9]$/
 
-    if testPattern.test marker
-      min = parseInt minutePattern.exec(marker), 10
-      sec = parseInt secondPattern.exec(marker), 10
+    if testPattern.test time
+      min = parseInt minutePattern.exec(time), 10
+      sec = parseInt secondPattern.exec(time), 10
       min * 60 + sec
     else
-      parseInt @trackInfo[index].marker, 10
+      parseInt time, 10
+
+  # Retrieves track markers
+  getMarker: (index) ->
+    marker = @trackInfo[index].marker
+    @parseTime marker
 
   # Updates the new artist and track info
   # Gets a localized iTunes Store link
