@@ -62,14 +62,7 @@
     Plugin.prototype.init = function() {
       var _this = this;
       $(window).resize(function() {
-        var tapeOffset;
-        this.shadowleft.css({
-          right: this.shadowleft.parent().width() / 2 + 63
-        });
-        this.shadowright.css({
-          left: this.shadowright.parent().width() / 2 + 64
-        });
-        tapeOffset = this.tapebox.parent().width() / 2 - 62;
+        this.adjustDimensions();
         if (this.cur > 0) {
           tapeOffset -= this.currentTrack * 125;
         }
@@ -178,15 +171,7 @@
             return soundManager.getSoundById("juke").setPosition(soundManager.getSoundById("juke").position - 5000);
           });
         }
-        _this.shadowleft.css({
-          right: _this.shadowleft.parent().width() / 2 + 63
-        });
-        _this.shadowright.css({
-          left: _this.shadowright.parent().width() / 2 + 64
-        });
-        _this.tapebox.css({
-          left: _this.tapebox.parent().width() / 2 - 62
-        });
+        _this.adjustDimensions();
         return _this.$elem.css("visibility", "visible");
       });
       return this;
@@ -206,6 +191,18 @@
       str = str.replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']');
       str = str.replace(/(?:^|:|,)(?:\s*\[)+/g, '');
       return /^[\],:{}\s]*$/.test(str);
+    };
+
+    Plugin.prototype.adjustDimensions = function() {
+      this.shadowleft.css({
+        right: this.shadowleft.parent().width() / 2 + 63
+      });
+      this.shadowright.css({
+        left: this.shadowright.parent().width() / 2 + 64
+      });
+      return this.tapebox.css({
+        left: this.tapebox.parent().width() / 2 - 62
+      });
     };
 
     Plugin.prototype.getMarker = function(index) {

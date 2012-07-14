@@ -44,9 +44,7 @@ class Plugin
   init: ->
     # Update the element alignment if the window is resized
     $(window).resize ->
-      @shadowleft.css {right: @shadowleft.parent().width() / 2 + 63}
-      @shadowright.css {left: @shadowright.parent().width() / 2 + 64}
-      tapeOffset = @tapebox.parent().width() / 2 - 62
+      @adjustDimensions()
       if @cur > 0 then tapeOffset -= @currentTrack * 125
       tapebox.css {left: tapeOffset}
 
@@ -154,9 +152,7 @@ class Plugin
         $("#skipbackward").click ->
           soundManager.getSoundById("juke").setPosition soundManager.getSoundById("juke").position - 5000
 
-      @shadowleft.css({right: @shadowleft.parent().width() / 2 + 63})
-      @shadowright.css({left: @shadowright.parent().width() / 2 + 64})
-      @tapebox.css({left: @tapebox.parent().width() / 2 - 62})
+      @adjustDimensions()
       @$elem.css("visibility", "visible")
 
     @
@@ -170,6 +166,11 @@ class Plugin
     str = str.replace /"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']'
     str = str.replace /(?:^|:|,)(?:\s*\[)+/g, ''
     (/^[\],:{}\s]*$/).test str
+
+  adjustDimensions: ->
+    @shadowleft.css({right: @shadowleft.parent().width() / 2 + 63})
+    @shadowright.css({left: @shadowright.parent().width() / 2 + 64})
+    @tapebox.css({left: @tapebox.parent().width() / 2 - 62})
 
   # Retrieves track markers
   getMarker: (index) ->
