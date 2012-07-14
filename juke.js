@@ -250,12 +250,18 @@
               if (link != null) {
                 newString += " (<a href='" + link + "' class='itunes-link'>iTunes</a>)";
               }
-              return _this.tooltip.html(newString);
+              return _this.tooltip.fadeOut(function() {
+                _this.tooltip.html(newString);
+                return _this.tooltip.fadeIn();
+              });
             });
           }
         });
       } else {
-        return this.tooltip.html(newString);
+        return this.tooltip.fadeOut(function() {
+          _this.tooltip.html(newString);
+          return _this.tooltip.fadeIn();
+        });
       }
     };
 

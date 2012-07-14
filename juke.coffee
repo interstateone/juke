@@ -206,8 +206,13 @@ class Plugin
               $.each data.results, => if this.trackName is track then link = this.trackViewUrl
 
             if link? then newString += " (<a href='" + link + "' class='itunes-link'>iTunes</a>)"
-            @tooltip.html newString
-    else @tooltip.html newString
+            @tooltip.fadeOut =>
+              @tooltip.html newString
+              @tooltip.fadeIn()
+    else
+      @tooltip.fadeOut =>
+        @tooltip.html newString
+        @tooltip.fadeIn()
 
 $.fn.juke = (options) ->
   @each -> new Plugin(@, options).load()
