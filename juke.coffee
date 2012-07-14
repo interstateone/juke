@@ -207,8 +207,7 @@ class Plugin
           $.getJSON queryString, (data) =>
             if data.resultCount is 1 then link = data.results[0].trackViewUrl
             else if data.resultCount > 1
-              $.each data.results, => if this.trackName is track then link = this.trackViewUrl
-
+              $.each data.results, (index, result) => if track is result.trackName then link = result.trackViewUrl
             if link? then newString += " (<a href='" + link + "' class='itunes-link'>iTunes</a>)"
             @changeTooltip(newString)
     else
