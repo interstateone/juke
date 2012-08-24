@@ -1,39 +1,46 @@
+JUKE
+====
+
 Juke is the best way to show off your mixtapes.
 
-It runs on [jQuery](http://jquery.com/) and [SoundManager 2](http://www.schillmania.com/projects/soundmanager2/). The sound goes through Flash 8+ or &lt;audio&gt;, and SoundManager handles all of that (it's *amazing*), so it works on almost any device. It even provides a link to your visitors' iTunes Store to purchase each track.
+It supports `<audio>` and Flash 8+, so it works on almost any device. It even provides a link to your visitors' regional iTunes Store to purchase each track. It runs on [jQuery](http://jquery.com/) and [SoundManager 2](http://www.schillmania.com/projects/soundmanager2/).
 
 How to use Juke
 ---------------
 
-<pre>
-&lt;link rel=&quot;stylesheet&quot; href=&quot;juke.css&quot; type=&quot;text/css&quot; &gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;jquery.js&quot;&gt;&lt;/script&gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;juke.js&quot;&gt;&lt;/script&gt;
+Put this with the rest of your stylesheets and script tags.
 
-&lt;div id=&quot;juke&quot;&gt;
-	&lt;ul&gt;
-		&lt;li&gt;&lt;img src=&quot;album art goes here&quot;&gt;&lt;/li&gt;
-	&lt;/ul&gt;
-&lt;/div&gt;
+	<link rel="stylesheet" href="juke.css" type="text/css">
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="juke.js"></script>
 
-&lt;script type=&quot;text/javascript&quot;&gt;
-	$(function(){
-		$(&quot;#juke&quot;).juke({
-			title: 				&quot;Mixtape&quot;,
-			imagesFolder: 		&quot;public/images/juke/&quot;, 	
-			soundmanagerFolder: &quot;public/swf/&quot;,			 
-			placeholder: 		&quot;images/juke/default.jpg&quot;,
-			trackinfo: 			&quot;trackinfo.json&quot;,
-			SM2:                &quot;public/docs/js/min/soundmanager2.min.js&quot;,
-			itunes:             true,
-			audio: 				&quot;mix.mp3&quot;,				 
-			tooltips: 			false,								 
-			animationSpeed: 	400,								 
-			debug: 				false								 
-		});
-	});
-&lt;/script&gt;
-</pre>
+Include this where you want Juke to shop on the page.
+
+	<div id="juke">
+		<ul>
+			<li><img src="album art goes here"></li>
+	    </ul>
+	</div>
+
+Initialize Juke and override these defaults if you need to.
+	
+	<script type="text/javascript">
+	    $(function(){
+	        $("#juke").juke({
+	            title:              "Mixtape",
+	            imagesFolder:       "public/images/juke/",    
+	            soundmanagerFolder: "public/swf/",             
+	            placeholder:        "images/juke/default.jpg",
+	            trackinfo:          "trackinfo.json",
+	            SM2:                "public/docs/js/min/soundmanager2.min.js",
+	            itunes:             true,
+	            audio:              "mix.mp3",                 
+	            tooltips:           false,                               
+	            animationSpeed:     400,                                 
+	            debug:              false                                
+	        });
+	    });
+	</script>
 
 Configuration Options
 ---------------------
@@ -50,27 +57,26 @@ Configuration Options
 - **animationSpeed** Speed of album art animation (in milliseconds)
 - **debug** Spits out lots of stuff to the console
 
-Juke uses a JSON object to store global and track metadata. This includes a start marker, artist name and track name for each track. The JSON object can be passed to Juke as a string or as a URL to a file with this information. You can format the markers as raw seconds or "mm:ss".
+Juke uses JSON to get its global and track metadata. This includes a start marker and the artist name and track name for each track. The JSON object can be passed to Juke as a string or a URL to this information. Time markers can be formatted as raw seconds or "mm:ss".
 
-<pre>
-{
-	"duration": "8:20",
-	"tracks":
-	[
-		{
-			"marker": "0",
-			"artist": "Geotic/Virtual Boy",
-			"track": "Through the Lush and Undiscovered/Thrust"
-		},
-		{
-			"marker": "78",
-			"artist": "Caribou",
-			"track": "Jamelia (Gold Panda Remix)"
-		},
-		{
-			"marker": "5:10",
-			"artist": "Gil Scott-Heron and Jamie XX",
-			"track": "Running"
-		}
-}
-</pre>
+	{
+		"duration": "8:20",
+		"tracks":
+		[
+			{
+				"marker": "0",
+				"artist": "Geotic/Virtual Boy",
+				"track": "Through the Lush and Undiscovered/Thrust"
+			},
+			{
+				"marker": "78",
+				"artist": "Caribou",
+				"track": "Jamelia (Gold Panda Remix)"
+			},
+			{
+				"marker": "5:10",
+				"artist": "Gil Scott-Heron and Jamie XX",
+				"track": "Running"
+			}
+		]
+	}
