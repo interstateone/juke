@@ -104,7 +104,7 @@
             _this.playtoggle.addClass('playing');
             document.title = "\u25B6 " + _this.settings.title + " - " + _this.title;
             if (_this.cur === 0) {
-              _this.tapeOffset = _this.tapebox.parent().width() / 2 - 62 - 125;
+              _this.tapeOffset = _this.tapebox.parent().width() / 2 - 63 - 125;
               _this.tapebox.animate({
                 "left": _this.tapeOffset
               }, _this.settings.animationSpeed, "swing");
@@ -144,7 +144,7 @@
             return _this.log("total: " + _this.duration + ", currently at: " + _this.cur + ", next marker: " + _this.nextMarker);
           }
         });
-        _this.playtoggle.click(function() {
+        _this.playtoggle.on('mousedown', function() {
           return soundManager.togglePause("juke");
         });
         if (_this.settings.debug) {

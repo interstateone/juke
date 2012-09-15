@@ -105,7 +105,7 @@ class Plugin
           @playtoggle.addClass 'playing'
           document.title = "\u25B6 " + @settings.title + " - " + @title
           if @cur is 0
-            @tapeOffset = @tapebox.parent().width() / 2 - 62 - 125
+            @tapeOffset = @tapebox.parent().width() / 2 - 63 - 125
             @tapebox.animate {"left": @tapeOffset}, @settings.animationSpeed, "swing"
             if @settings.tooltips
               @updateInfo @trackInfo[@currentTrack - 1].artist, @trackInfo[@currentTrack - 1].track
@@ -132,7 +132,7 @@ class Plugin
 
           @log "total: " + @duration + ", currently at: " + @cur + ", next marker: " + @nextMarker
 
-      @playtoggle.click -> soundManager.togglePause "juke"
+      @playtoggle.on 'mousedown', -> soundManager.togglePause "juke"
 
       if @settings.debug
         @$elem.append '<span id="skipbackward">REV</span>&nbsp;-&nbsp;<span id="skipforward">FWD</span>'
