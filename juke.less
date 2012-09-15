@@ -1,11 +1,11 @@
 /* LESS Functions */
 
 .opacity(@value: 0.5) {
-    -khtml-opacity: @value;  							// some pre-2004 browsers
-    -moz-opacity: 	@value;    							// really old FF versions
-    -ms-filter: 	%('alpha(opacity=%s)', @value); 	// some IE versions
-    filter: 		e(%("alpha(opacity=%s)", @value));  // most other IE versions
-    opacity: 		@value;         					// CSS standard
+    -khtml-opacity: @value;               // some pre-2004 browsers
+    -moz-opacity:   @value;                 // really old FF versions
+    -ms-filter:   %('alpha(opacity=%s)', @value);   // some IE versions
+    filter:     e(%("alpha(opacity=%s)", @value));  // most other IE versions
+    opacity:    @value;                   // CSS standard
 }
 
 /* Main Styles */
@@ -139,10 +139,6 @@
 
   em {
     font-style: oblique;
-  }
-
-  .itunes-link {
-    color: gray;
   }
 }
 
