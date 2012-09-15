@@ -59,6 +59,9 @@ class Plugin
         async: false
         success: (data) => @parseTrackInfo data
 
+    # Is this a retina display?
+    extension = if window.devicePixelRatio > 1 then '@2x.png' else '.png'
+
     # setup the DOM structure inside empty div
     # wrap the albumart list
     @$elem.children().wrapAll '<ul id="tapebox"/>'
@@ -69,20 +72,20 @@ class Plugin
     @tapebox.prepend "<li><img src='#{ @settings.placeholder }' width='125'></li>"
 
     # prepend the bg image
-    $("#displaybox").prepend "<img src='#{ @settings.imagesFolder }bg.png'>"
+    $("#displaybox").prepend "<img src='#{ @settings.imagesFolder }bg#{ extension }'>"
 
     # add the other structure around the list
     @$elem.prepend """
       <div id='shadowleft' class='shadow'></div>
       <div id='shadowright' class='shadow'></div>
       <div id='playhead'>
-        <img src='#{ @settings.imagesFolder }playhead_overlay.png'>
+        <img src='#{ @settings.imagesFolder }playhead_overlay#{ extension }'>
         <div id='playtoggle' class='hover'></div>
       </div>
       """
     @$elem.append """
       <div id='displaybox_overlay'>
-        <img src='#{ @settings.imagesFolder }displaybox_overlay.png' />
+        <img src='#{ @settings.imagesFolder }displaybox_overlay#{ extension }' />
       </div>
       """
     if @settings.tooltips

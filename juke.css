@@ -1,18 +1,13 @@
-#juke{position:relative;width:100%;font-size:12px;display:none;}
-#juke ul{margin:0;padding:0;}
-#juke ul li:before{content:none;}
-#playhead{display:block;position:absolute;top:-7px;margin-left:50%;left:-65px;z-index:20;}
-#playtoggle{position:absolute;top:58px;left:50px;width:30px;height:30px;background:url(../../images/juke/player.png) no-repeat -30px 0px;cursor:pointer;z-index:0;}
-.hover{z-index:25 !important;}
-#playtoggle.playing{background-position:0 0;}
+#juke{position:relative;width:100%;font-size:12px;display:none;}#juke ul{margin:0;padding:0;}#juke ul li:before{content:none;}
+#playhead{display:block;position:absolute;top:-7px;margin-left:50%;left:-65px;z-index:20;width:132px;height:143px;}
+#playtoggle{position:absolute;top:58px;left:50px;width:30px;height:30px;background:url("../../images/juke/player.png") no-repeat -30px 0px;cursor:pointer;z-index:0;}#playtoggle.playing{background-position:0 0;}
+@media only screen and (-webkit-min-device-pixel-ratio:2),only screen and (min--moz-device-pixel-ratio:2),only screen and (min-moz-device-pixel-ratio:2),only screen and (-o-min-device-pixel-ratio:2/1),only screen and (min-device-pixel-ratio:2){#playtoggle{background-image:url("../../images/juke/player@2x.png");-webkit-background-size:60px 30px;-moz-background-size:60px 30px;-o-background-size:60px 30px;background-size:60px 30px;}}.hover{z-index:25 !important;}
 .shadow{position:absolute;height:125px;background-color:rgba(0, 0, 0, 0.5);background:transparent\9;-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#7F000000,endColorstr=#7F000000)";zoom:1;z-index:10;}
 #shadowleft{left:0px;}
 #shadowright{right:0px;}
-#displaybox{width:100%;overflow:hidden;top:0px;position:relative;}
-#displaybox>img{height:125px;width:100%;}
+#displaybox{width:100%;overflow:hidden;top:0px;position:relative;}#displaybox>img{height:125px;width:100%;}
 #displaybox_overlay img{z-index:5;top:0px;position:absolute;height:125px;width:100%;}
-#tapebox{position:absolute;height:150px;width:3000px;top:0px;color:transparent;text-indent:0;}
-#tapebox li{list-style:none;display:block;float:left;margin:0px;padding:0px;width:125px;}
+#tapebox{position:absolute;height:150px;width:3000px;top:0px;color:transparent;text-indent:0;}#tapebox li{list-style:none;display:block;float:left;margin:0px;padding:0px;width:125px;}
 .tooltip{font-size:90%;text-align:center;color:gray;margin-top:2%;}.tooltip p{padding:0;margin:0 0 5px 0;line-height:10px;}
 .tooltip em{font-style:oblique;}
 .tooltip .itunes-link{color:gray;}

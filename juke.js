@@ -61,7 +61,8 @@
     };
 
     Plugin.prototype.init = function() {
-      var _this = this;
+      var extension,
+        _this = this;
       this.currentTrack = 1;
       this.cur = 0;
       this.title = document.title;
@@ -80,13 +81,14 @@
           }
         });
       }
+      extension = window.devicePixelRatio > 1 ? '@2x.png' : '.png';
       this.$elem.children().wrapAll('<ul id="tapebox"/>');
       this.tapebox = $("#tapebox");
       this.tapebox.wrapAll('<div id="displaybox"/>');
       this.tapebox.prepend("<li><img src='" + this.settings.placeholder + "' width='125'></li>");
-      $("#displaybox").prepend("<img src='" + this.settings.imagesFolder + "bg.png'>");
-      this.$elem.prepend("<div id='shadowleft' class='shadow'></div>\n<div id='shadowright' class='shadow'></div>\n<div id='playhead'>\n  <img src='" + this.settings.imagesFolder + "playhead_overlay.png'>\n  <div id='playtoggle' class='hover'></div>\n</div>");
-      this.$elem.append("<div id='displaybox_overlay'>\n  <img src='" + this.settings.imagesFolder + "displaybox_overlay.png' />\n</div>");
+      $("#displaybox").prepend("<img src='" + this.settings.imagesFolder + "bg" + extension + "'>");
+      this.$elem.prepend("<div id='shadowleft' class='shadow'></div>\n<div id='shadowright' class='shadow'></div>\n<div id='playhead'>\n  <img src='" + this.settings.imagesFolder + "playhead_overlay" + extension + "'>\n  <div id='playtoggle' class='hover'></div>\n</div>");
+      this.$elem.append("<div id='displaybox_overlay'>\n  <img src='" + this.settings.imagesFolder + "displaybox_overlay" + extension + "' />\n</div>");
       if (this.settings.tooltips) {
         this.$elem.append("<div class='tooltip'>" + this.settings.title + "</div>");
         this.tooltip = $(".tooltip");
